@@ -1,9 +1,10 @@
 import random
+from word import Word
 
 
 class Dictionary:
     def __init__(self):
-        self.words = ['ahoj', 'lorem', 'ipsum', 'ypsum', 'dolores', 'ahmed', 'alah', 'trautemberk', 'lora', 'lore']
+        self.words = list(map(lambda x: Word(x), open('words.list', 'r').read().split("\n")))
         random.shuffle(self.words)
         self.index = 0
 
