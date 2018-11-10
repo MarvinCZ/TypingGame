@@ -26,11 +26,20 @@ class Renderer:
     EXPERIENCE_BAR_BACKGROUND_COLOR = (50, 50, 50)
     HIT_BAR_COLOR = (100, 200, 200)
     HIT_BAR_BACKGROUND_COLOR = (50, 50, 50)
+    ENEMY_NAME_TEXT_COLOR = (200, 200, 200)
 
     # FONTS
     DEFAULT_FONT_BOLD = 'Inconsolata-Bold.ttf'
     DEFAULT_FONT_REGULAR = 'Inconsolata-Regular.ttf'
     WORD_FONT_SIZE = 32
+
+    # WIN AND LOSS SCREEN
+    WIN_BACKGROUND_COLOR = (210, 210, 210)
+    WIN_TEXT_COLOR = (50, 50, 50)
+    WIN_TEXT = "You win! :)"
+    LOSS_BACKGROUND_COLOR = (35, 35, 35)
+    LOSS_TEXT_COLOR = (255, 0, 0)
+    LOSS_TEXT = "You died! :("
 
     def __init__(self):
         self.screen = pygame.display.set_mode((Renderer.WINDOW_WIDTH, Renderer.WINDOW_HEIGHT))
@@ -64,7 +73,7 @@ class Renderer:
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
 
-    def render_enemy_health_bar(self, max_health, current_health):
+    def render_enemy_health_bar(self, max_health, current_health, name):
         background, foreground = self.create_bar(
             0,
             0,
@@ -73,6 +82,13 @@ class Renderer:
         )
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
+
+        label, rectangle = self.text_objects(
+            name,
+            Renderer.ENEMY_NAME_TEXT_COLOR,
+            (self.width / 2, Renderer.HEALTH_BAR_HEIGHT / 2 + Renderer.BAR_MARGIN)
+        )
+        self.screen.blit(label, rectangle)
 
     def render_experience_bar(self, max_experience, current_experience):
         background, foreground = self.create_bar(
@@ -93,10 +109,7 @@ class Renderer:
             label, rectangle = self.text_objects(
                 words[i].word.upper(),
                 Renderer.WORD_COLOR,
-                (
-                    self.width / 2,
-                    top + Renderer.WORD_FONT_SIZE / 2
-                )
+                (self.width / 2, top + Renderer.WORD_FONT_SIZE / 2)
             )
 
             if words[i] in valid_words and current_letter_count > 0:
@@ -129,3 +142,21 @@ class Renderer:
         )
 
         return health_bar_background, health_bar
+
+    def render_win_screen(self):
+        self.screen.fill(Renderer.WIN_BACKGROUND_COLOR)
+        label, rectangle = self.text_objects(
+            Renderer.WIN_TEXT,
+            Renderer.WIN_TEXT_COLOR,
+            (self.width / 2, self.height / 2)
+        )
+        self.screen.blit(label, rectangle)
+
+    def render_loss_screen(self):
+        self.screen.fill(Renderer.LOSS_BACKGROUND_COLOR)
+        label, rectangle = self.text_objects(
+            Renderer.LOSS_TEXT,
+            Renderer.LOSS_TEXT_COLOR,
+            (self.width / 2, self.height / 2)
+        )
+        self.screen.blit(label, rectangle)

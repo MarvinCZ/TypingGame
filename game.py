@@ -22,12 +22,17 @@ class Game:
         self.renderer = Renderer()
 
     def draw(self):
-        self.renderer.draw_background()
-        self.renderer.render_words(self.words, self.get_valid_words(self.letters), len(self.letters))
-        self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
-        self.renderer.render_enemy_health_bar(self.enemy.max_health, self.enemy.health)
-        self.renderer.render_experience_bar(100, 55)
-        self.renderer.render_time_bar(self.enemy.damage_time, int(self.enemy.timer() * 1000))
+        if self.win:
+            self.renderer.render_win_screen()
+        elif self.loss:
+            self.renderer.render_loss_screen()
+        else:
+            self.renderer.draw_background()
+            self.renderer.render_words(self.words, self.get_valid_words(self.letters), len(self.letters))
+            self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
+            self.renderer.render_enemy_health_bar(self.enemy.max_health, self.enemy.health, self.enemy.name)
+            self.renderer.render_experience_bar(100, 55)
+            self.renderer.render_time_bar(self.enemy.damage_time, int(self.enemy.timer() * 1000))
 
     def tick(self, events):
         if self.enemy.health <= 0:
@@ -44,9 +49,9 @@ class Game:
     def handle_key(self, key):
         letter = self.get_letter(key)
         if letter:
-            self.handle_new_latter(letter)
+            self.handle_new_letter(letter)
 
-    def handle_new_latter(self, letter):
+    def handle_new_letter(self, letter):
         new_letters = self.letters + [letter]
         valid_words = self.get_valid_words(new_letters)
         if valid_words:
