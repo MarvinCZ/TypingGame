@@ -6,11 +6,15 @@ class Renderer:
     # SIZES
     WINDOW_WIDTH = 480
     WINDOW_HEIGHT = 640
-    WORDS_MARGIN_TOP = 60
+    WORDS_MARGIN_TOP = 90
+    TIME_TO_HIT_MARGIN_TOP = 60
     BAR_MARGIN = 10
     BAR_BORDER_WIDTH = 2
     HEALTH_BAR_HEIGHT = 40
     EXPERIENCE_BAR_HEIGHT = 20
+    EXPERIENCE_HEALTH_BAR_PADDING = 5
+    HIT_HEALTH_BAR_PADDING = 5
+    HIT_BAR_HEIGHT = 20
 
     # COLORS
     WORD_COLOR = (52, 52, 52)
@@ -20,7 +24,8 @@ class Renderer:
     HEALTH_BAR_BACKGROUND_COLOR = (50, 50, 50)
     EXPERIENCE_BAR_COLOR = (255, 165, 0)
     EXPERIENCE_BAR_BACKGROUND_COLOR = (50, 50, 50)
-    EXPERIENCE_HEALTH_BAR_PADDING = 5
+    HIT_BAR_COLOR = (100, 200, 200)
+    HIT_BAR_BACKGROUND_COLOR = (50, 50, 50)
 
     # FONTS
     DEFAULT_FONT_BOLD = 'Inconsolata-Bold.ttf'
@@ -38,6 +43,16 @@ class Renderer:
 
     def draw_background(self):
         self.screen.fill(Renderer.BACKGROUND_COLOR)
+
+    def render_time_bar(self, max_time, current_time):
+        background, foreground = self.create_bar(
+            0,
+            Renderer.HIT_HEALTH_BAR_PADDING + Renderer.HEALTH_BAR_HEIGHT,
+            Renderer.HIT_BAR_HEIGHT,
+            current_time / max_time
+        )
+        pygame.draw.rect(self.screen, Renderer.HIT_BAR_BACKGROUND_COLOR, background)
+        pygame.draw.rect(self.screen, Renderer.HIT_BAR_COLOR, foreground)
 
     def render_player_health_bar(self, max_health, current_health):
         background, foreground = self.create_bar(
@@ -70,7 +85,7 @@ class Renderer:
         pygame.draw.rect(self.screen, Renderer.EXPERIENCE_BAR_COLOR, foreground)
 
     def draw_gradient(self, rectangle, from_color, to_color):
-        self.screen.blit( gradients.vertical((rectangle.width, rectangle.height), from_color, to_color),(rectangle.left,rectangle.top))
+        self.screen.blit(gradients.vertical((rectangle.width, rectangle.height), from_color, to_color), (rectangle.left, rectangle.top))
 
     def render_words(self, words, valid_words, current_letter_count):
         for i in range(len(words)):
