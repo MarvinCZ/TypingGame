@@ -5,18 +5,21 @@ import renderer
 
 class Game:
     WORDS_MARGIN_TOP = 20
-    WIDTH = 620
-    HEIGHT = 320
-    WORD_FONT_SIZE = 25
+    WIDTH = 480
+    HEIGHT = 640
+    WORD_FONT_SIZE = 32
     WORD_MARGIN = 5
-    DEFAULT_FONT = 'MonoSpace'
-    DEFAULT_WORD_COLOR = (0,0,0)
+    DEFAULT_FONT_BOLD = 'Inconsolata-Bold.ttf'
+    DEFAULT_FONT_REGULAR = 'Inconsolata-Regular.ttf'
+    WORD_COLOR = (52, 52, 52)
+    BACKGROUND_COLOR = (56, 119, 119)
+    WORD_HIGHLIGHT_COLOR = (153, 179, 179)
 
     def __init__(self):
         self.player = None
         self.enemy = None
         self.dictionary = Dictionary()
-        self.font = pygame.font.SysFont(Game.DEFAULT_FONT, Game.WORD_FONT_SIZE)
+        self.font = pygame.font.Font(Game.DEFAULT_FONT_BOLD, Game.WORD_FONT_SIZE)
 
         self.words = [self.dictionary.get() for i in range(5)]
         self.letters = []
@@ -25,16 +28,16 @@ class Game:
         valid_words, _ = self.get_valid_words(self.letters)
         for i in range(len(self.words)):
             top = i * Game.WORD_FONT_SIZE + Game.WORDS_MARGIN_TOP
-            label, rectangle = renderer.text_objects(self.font, self.words[i], Game.DEFAULT_WORD_COLOR, (Game.WIDTH/2, top + Game.WORD_FONT_SIZE/2))
+            label, rectangle = renderer.text_objects(self.font, self.words[i].upper(), Game.WORD_COLOR, (Game.WIDTH/2, top + Game.WORD_FONT_SIZE/2))
             if i in valid_words and len(self.letters) > 0:
                 count_of_letters = len(self.words[i])
                 new_rectangle = pygame.Rect(rectangle.left, rectangle.top, rectangle.width * (len(self.letters) / count_of_letters), rectangle.height)
-                pygame.draw.rect(screen, (255,255,255), new_rectangle)
+                pygame.draw.rect(screen, Game.WORD_HIGHLIGHT_COLOR, new_rectangle)
 
             screen.blit(label, rectangle)
 
     def draw(self, screen):
-        screen.fill((110, 191, 191))
+        screen.fill(Game.BACKGROUND_COLOR)
         self.draw_words(screen)
 
     def handle_key(self, key):
