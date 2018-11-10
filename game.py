@@ -4,7 +4,6 @@ import renderer
 
 
 class Game:
-
     WORDS_MARGIN_TOP = 20
     WIDTH = 620
     HEIGHT = 320
