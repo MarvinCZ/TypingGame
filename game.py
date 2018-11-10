@@ -32,13 +32,14 @@ class Game:
             self.renderer.render_words(self.words, self.get_valid_words(self.letters), len(self.letters))
             self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
             self.renderer.render_enemy_health_bar(self.enemy.max_health, self.enemy.health, self.enemy.name)
-            self.renderer.render_experience_bar(100, 55)
+            self.renderer.render_experience_bar(4, self.player.experience)
             self.renderer.render_time_bar(self.enemy.damage_time, int(self.enemy.timer() * 1000))
 
     def tick(self, events):
         if self.enemy.health <= 0:
             if len(enemies) > 0:
                 self.enemy = enemies.pop(0)
+                self.player.experience += 1
             else:
                 self.win = True
         if self.player.health <= 0:
