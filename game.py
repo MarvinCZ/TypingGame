@@ -25,6 +25,8 @@ class Game:
         self.renderer.draw_background()
         self.renderer.render_words(self.words, self.get_valid_words(self.letters), len(self.letters))
         self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
+        self.renderer.render_enemy_health_bar(self.enemy.max_health, self.enemy.health)
+        self.renderer.render_experience_bar(100, 55)
 
     def tick(self, events):
         if self.enemy.health <= 0:

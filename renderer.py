@@ -7,9 +7,10 @@ class Renderer:
     WINDOW_WIDTH = 480
     WINDOW_HEIGHT = 640
     WORDS_MARGIN_TOP = 60
-    HEALTH_BAR_MARGIN = 10
+    BAR_MARGIN = 10
+    BAR_BORDER_WIDTH = 2
     HEALTH_BAR_HEIGHT = 40
-    HEALTH_BAR_BORDER_WIDTH = 2
+    EXPERIENCE_BAR_HEIGHT = 20
 
     # COLORS
     WORD_COLOR = (52, 52, 52)
@@ -17,6 +18,9 @@ class Renderer:
     WORD_HIGHLIGHT_COLOR = (153, 179, 179)
     HEALTH_BAR_COLOR = (255, 0, 0)
     HEALTH_BAR_BACKGROUND_COLOR = (50, 50, 50)
+    EXPERIENCE_BAR_COLOR = (255, 165, 0)
+    EXPERIENCE_BAR_BACKGROUND_COLOR = (50, 50, 50)
+    EXPERIENCE_HEALTH_BAR_PADDING = 5
 
     # FONTS
     DEFAULT_FONT_BOLD = 'Inconsolata-Bold.ttf'
@@ -36,25 +40,34 @@ class Renderer:
         self.screen.fill(Renderer.BACKGROUND_COLOR)
 
     def render_player_health_bar(self, max_health, current_health):
-        # TODO: Move
-        health_bar_background_width = self.width - 2 * Renderer.HEALTH_BAR_MARGIN
-        health_bar_width = (health_bar_background_width - 2 * Renderer.HEALTH_BAR_BORDER_WIDTH) * current_health / max_health
-
-        health_bar_background = pygame.Rect(
-            Renderer.HEALTH_BAR_MARGIN,
-            Renderer.HEALTH_BAR_MARGIN,
-            health_bar_background_width,
-            Renderer.HEALTH_BAR_HEIGHT
+        background, foreground = self.create_bar(
+            0,
+            self.height - Renderer.HEALTH_BAR_HEIGHT - 2 * Renderer.BAR_MARGIN - Renderer.EXPERIENCE_BAR_HEIGHT - Renderer.EXPERIENCE_HEALTH_BAR_PADDING,
+            Renderer.HEALTH_BAR_HEIGHT,
+            current_health / max_health
         )
-        health_bar = pygame.Rect(
-            Renderer.HEALTH_BAR_MARGIN + Renderer.HEALTH_BAR_BORDER_WIDTH,
-            Renderer.HEALTH_BAR_MARGIN + Renderer.HEALTH_BAR_BORDER_WIDTH,
-            health_bar_width,
-            Renderer.HEALTH_BAR_HEIGHT - 2 * Renderer.HEALTH_BAR_BORDER_WIDTH
-        )
+        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
+        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
 
-        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, health_bar_background)
-        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, health_bar)
+    def render_enemy_health_bar(self, max_health, current_health):
+        background, foreground = self.create_bar(
+            0,
+            0,
+            Renderer.HEALTH_BAR_HEIGHT,
+            current_health / max_health
+        )
+        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
+        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
+
+    def render_experience_bar(self, max_experience, current_experience):
+        background, foreground = self.create_bar(
+            0,
+            self.height - Renderer.EXPERIENCE_BAR_HEIGHT - 2 * Renderer.BAR_MARGIN,
+            Renderer.EXPERIENCE_BAR_HEIGHT,
+            current_experience / max_experience
+        )
+        pygame.draw.rect(self.screen, Renderer.EXPERIENCE_BAR_BACKGROUND_COLOR, background)
+        pygame.draw.rect(self.screen, Renderer.EXPERIENCE_BAR_COLOR, foreground)
 
     def draw_gradient(self, rectangle, from_color, to_color):
         self.screen.blit( gradients.vertical((rectangle.width, rectangle.height), from_color, to_color),(rectangle.left,rectangle.top))
@@ -82,3 +95,22 @@ class Renderer:
                 pygame.draw.rect(self.screen, Renderer.WORD_HIGHLIGHT_COLOR, new_rectangle)
 
             self.screen.blit(label, rectangle)
+
+    def create_bar(self, x, y, height, percentage):
+        health_bar_background_width = self.width - 2 * Renderer.BAR_MARGIN
+        health_bar_width = (health_bar_background_width - 2 * Renderer.BAR_BORDER_WIDTH) * percentage
+
+        health_bar_background = pygame.Rect(
+            x + Renderer.BAR_MARGIN,
+            y + Renderer.BAR_MARGIN,
+            health_bar_background_width,
+            height
+        )
+        health_bar = pygame.Rect(
+            x + Renderer.BAR_MARGIN + Renderer.BAR_BORDER_WIDTH,
+            y + Renderer.BAR_MARGIN + Renderer.BAR_BORDER_WIDTH,
+            health_bar_width,
+            height - 2 * Renderer.BAR_BORDER_WIDTH
+        )
+
+        return health_bar_background, health_bar
