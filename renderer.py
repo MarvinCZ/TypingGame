@@ -20,9 +20,11 @@ class Renderer:
     WORD_COLOR = (52, 52, 52)
     BACKGROUND_COLOR = (56, 119, 119)
     WORD_HIGHLIGHT_COLOR = (153, 179, 179)
-    HEALTH_BAR_COLOR = (255, 0, 0)
+    HEALTH_BAR_COLOR_FROM = (255, 0, 0, 255)
+    HEALTH_BAR_COLOR_TO = (100, 10, 10, 255)
     HEALTH_BAR_BACKGROUND_COLOR = (50, 50, 50)
-    EXPERIENCE_BAR_COLOR = (255, 165, 0)
+    EXPERIENCE_BAR_COLOR_FROM = (255, 165, 0, 255)
+    EXPERIENCE_BAR_COLOR_TO = (100, 65, 0, 255)
     EXPERIENCE_BAR_BACKGROUND_COLOR = (50, 50, 50)
     HIT_BAR_COLOR = (100, 200, 200)
     HIT_BAR_BACKGROUND_COLOR = (50, 50, 50)
@@ -71,7 +73,8 @@ class Renderer:
             current_health / max_health
         )
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
-        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
+        # pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
+        self.draw_gradient(foreground, Renderer.HEALTH_BAR_COLOR_FROM, Renderer.HEALTH_BAR_COLOR_TO)
 
     def render_enemy_health_bar(self, max_health, current_health, name):
         background, foreground = self.create_bar(
@@ -81,7 +84,7 @@ class Renderer:
             current_health / max_health
         )
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, background)
-        pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, foreground)
+        self.draw_gradient(foreground, Renderer.HEALTH_BAR_COLOR_FROM, Renderer.HEALTH_BAR_COLOR_TO)
 
         label, rectangle = self.text_objects(
             name,
@@ -98,7 +101,7 @@ class Renderer:
             current_experience / max_experience
         )
         pygame.draw.rect(self.screen, Renderer.EXPERIENCE_BAR_BACKGROUND_COLOR, background)
-        pygame.draw.rect(self.screen, Renderer.EXPERIENCE_BAR_COLOR, foreground)
+        self.draw_gradient(foreground, Renderer.EXPERIENCE_BAR_COLOR_FROM, Renderer.EXPERIENCE_BAR_COLOR_TO)
 
     def draw_gradient(self, rectangle, from_color, to_color):
         self.screen.blit(gradients.vertical((rectangle.width, rectangle.height), from_color, to_color), (rectangle.left, rectangle.top))

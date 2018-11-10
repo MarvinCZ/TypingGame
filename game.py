@@ -3,6 +3,7 @@ from dictionary import Dictionary
 from player import Player
 from enemy import Enemy
 from renderer import Renderer
+from levels import enemies
 
 
 class Game:
@@ -11,7 +12,7 @@ class Game:
 
     def __init__(self):
         self.player = Player()
-        self.enemy = Enemy(name='Cthulhu')
+        self.enemy = enemies.pop(0)
         self.dictionary = Dictionary()
         self.win = False
         self.loss = False
@@ -36,7 +37,10 @@ class Game:
 
     def tick(self, events):
         if self.enemy.health <= 0:
-            self.win = True
+            if len(enemies) > 0:
+                self.enemy = enemies.pop(0)
+            else:
+                self.win = True
         if self.player.health <= 0:
             self.loss = True
 
