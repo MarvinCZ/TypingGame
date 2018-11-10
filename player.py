@@ -1,7 +1,7 @@
 class Player:
     def __init__(self):
         self.experience = 0
-        self.max_health = 100
+        self.max_health = 1000
         self.health = 1000
         self.base_damage = 10000
         self.recovery_time = 1000  # ms

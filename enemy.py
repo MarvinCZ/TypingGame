@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 
 class Enemy:
-    def __init__(self, max_health=5000, experience_drop=5000, name='Ghost', damage=10, damage_time=10000):
+    def __init__(self, max_health=5000, experience_drop=5000, name='Ghost', damage=100, damage_time=5000):
         self.max_health = max_health
         self.health = self.max_health
         self.experience_drop = experience_drop

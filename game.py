@@ -24,7 +24,7 @@ class Game:
     def draw(self):
         self.renderer.draw_background()
         self.renderer.render_words(self.words, self.get_valid_words(self.letters), len(self.letters))
-        self.renderer.render_health_bar(self.player.max_health, self.player.health)
+        self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
 
     def tick(self, events):
 
