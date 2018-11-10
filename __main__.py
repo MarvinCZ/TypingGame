@@ -12,13 +12,12 @@ def main():
 
     running = True
     while running:
+        events = pygame.event.get()
+        game.tick(events)
         game.draw(screen)
-        # game.tick()
         # renderer.render_all(game, screen)
         pygame.display.flip()
-        for event in pygame.event.get():
-            if event.type == pygame.KEYUP:
-                game.handle_key(event.key)
+        for event in events:
             if event.type == pygame.QUIT:
                 running = False
 

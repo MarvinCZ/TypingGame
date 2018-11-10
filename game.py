@@ -1,6 +1,8 @@
 import pygame
 from dictionary import Dictionary
 import renderer
+from player import Player
+from enemy import Enemy
 
 
 class Game:
@@ -18,10 +20,12 @@ class Game:
     WORD_HIGHLIGHT_COLOR = (153, 179, 179)
 
     def __init__(self):
-        self.player = None
-        self.enemy = None
+        self.player = Player()
+        self.enemy = Enemy(name='Cthulhu')
         self.dictionary = Dictionary()
         self.font = pygame.font.Font(Game.DEFAULT_FONT_BOLD, Game.WORD_FONT_SIZE)
+        self.win = False
+        self.loss = False
 
         self.words = [self.dictionary.get() for i in range(Game.WORDS_COUNT)]
         self.letters = []
@@ -37,10 +41,28 @@ class Game:
                 pygame.draw.rect(screen, Game.WORD_HIGHLIGHT_COLOR, new_rectangle)
 
             screen.blit(label, rectangle)
+        self.draw_attributes(screen)
+
+    def draw_attributes(self, screen):
+        attributes = "BossHealth: {}\nPlayerHeath: {}\nTimer: {}".format(self.enemy.health, self.player.health, self.enemy.timer())
+        print(attributes)
 
     def draw(self, screen):
         screen.fill(Game.BACKGROUND_COLOR)
         self.draw_words(screen)
+
+    def tick(self, events):
+
+        if self.enemy.health <= 0:
+            self.win = True
+        if self.player.health <= 0:
+            self.loss = True
+
+        if not self.loss and not self.win:
+            self.enemy.process_channeling(self.player)
+            for event in events:
+                if event.type == pygame.KEYUP:
+                    self.handle_key(event.key)
 
     def handle_key(self, key):
         letter = self.get_letter(key)
@@ -57,18 +79,10 @@ class Game:
                     self.letters = new_letters
 
     def get_valid_words(self, letters):
-        valid_words = []
-        for word in self.words:
-            if word.is_valid(letters):
-                valid_words.append(word)
-        return valid_words
+        return [x for x in self.words if x.is_valid(letters)]
 
     def get_completed_words(self, letters):
-        completed_words = []
-        for word in self.words:
-            if word.is_complete(letters):
-                completed_words.append(word)
-        return completed_words
+        return [x for x in self.words if x.is_complete(letters)]
 
     @staticmethod
     def get_letter(key):
@@ -80,9 +94,9 @@ class Game:
         if type(words) != list:
             words = [words]
 
-        count = len(words)
         for word in words:
+            self.enemy.hit(word.damage(self.player.base_damage), self.player)
             self.words.remove(word)
             self.words.append(self.dictionary.get())
-        pass
+
 

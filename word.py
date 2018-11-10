@@ -12,3 +12,6 @@ class Word:
 
     def is_complete(self, letters):
         return self.is_valid(letters) and len(letters) == len(self.word)
+
+    def damage(self, base_damage):
+        return int((len(self.word) * base_damage)/100)
