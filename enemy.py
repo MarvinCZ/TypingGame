@@ -29,4 +29,3 @@ class Enemy:
         if self.health < 0:
             self.health = 0
         self.delay_channeling(player)
-

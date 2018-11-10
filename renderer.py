@@ -1,4 +1,5 @@
 import pygame
+import gradients
 
 
 class Renderer:
@@ -54,6 +55,9 @@ class Renderer:
 
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_BACKGROUND_COLOR, health_bar_background)
         pygame.draw.rect(self.screen, Renderer.HEALTH_BAR_COLOR, health_bar)
+
+    def draw_gradient(self, rectangle, from_color, to_color):
+        self.screen.blit( gradients.vertical((rectangle.width, rectangle.height), from_color, to_color),(rectangle.left,rectangle.top))
 
     def render_words(self, words, valid_words, current_letter_count):
         for i in range(len(words)):

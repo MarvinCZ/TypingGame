@@ -27,7 +27,6 @@ class Game:
         self.renderer.render_player_health_bar(self.player.max_health, self.player.health)
 
     def tick(self, events):
-
         if self.enemy.health <= 0:
             self.win = True
         if self.player.health <= 0:
@@ -42,16 +41,18 @@ class Game:
     def handle_key(self, key):
         letter = self.get_letter(key)
         if letter:
-            new_letters = list(self.letters)
-            new_letters.append(letter)
-            valid_words = self.get_valid_words(new_letters)
-            if valid_words:
-                complete_words = self.get_completed_words(new_letters)
-                if complete_words:
-                    self.letters = []
-                    self.word_completed(complete_words)
-                else:
-                    self.letters = new_letters
+            self.handle_new_latter(letter)
+
+    def handle_new_latter(self, letter):
+        new_letters = self.letters + [letter]
+        valid_words = self.get_valid_words(new_letters)
+        if valid_words:
+            complete_words = self.get_completed_words(new_letters)
+            if complete_words:
+                self.letters = []
+                self.word_completed(complete_words)
+            else:
+                self.letters = new_letters
 
     def get_valid_words(self, letters):
         return [x for x in self.words if x.is_valid(letters)]
@@ -72,4 +73,8 @@ class Game:
         for word in words:
             self.enemy.hit(word.damage(self.player.base_damage), self.player)
             self.words.remove(word)
+        self.fill_words()
+
+    def fill_words(self):
+        while len(self.words) < Game.WORDS_COUNT:
             self.words.append(self.dictionary.get())
